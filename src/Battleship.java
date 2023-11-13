@@ -1,6 +1,10 @@
 import java.util.Scanner;
 
 public class Battleship {
+	public static int x;
+	public static int y;
+	
+	public static boolean orientation;
 	public static int numRows = 10;
     public static int numCols = 10;
     public static String[][] grid = new String[numRows][numCols];
@@ -13,17 +17,15 @@ public class Battleship {
 		createOceanMap();
 		String choice = "";
 		int number = 0;
-		int shipLength = 0;
-		boolean orientation = false;
 		int tempX = 0;
 		int tempY = 0;
-		boolean canFit = false;
 		
 		
 		//Carrier Ship
 		Ship Carrier = new Ship();
 		Carrier.shipLength = 5;
 		//input for orientation of the ship. false = Horizontal || true = Vertical. Default is horizontal.
+		while(Carrier.canIFit(Carrier.shipLength, orientation, tempX, tempY) == false) {
 		orientation = Carrier.shipOrientation(choice = getInput("What orientation do you want your Carrier to be placed in? \n[H] Horizontal \n[V] Vertical"));
 		if (orientation == false) {
 			System.out.println("The ship's orientation is: Horizontal");
@@ -35,11 +37,16 @@ public class Battleship {
 		System.out.println("Place down your Carrier at coordinates:");
 		System.out.print("Enter X coordinate for your ship: ");
 		Carrier.x = getInput2(number);
+		tempX = Carrier.x;
 		System.out.print("Enter Y coordinate for your ship: ");
 		Carrier.y = getInput2(number);
+		tempY = Carrier.y;
 		System.out.println("Start position: "+Carrier.toString());
+		
 			
+		
 		//For loop based on shipLength
+		if (Carrier.canIFit(Carrier.shipLength, Carrier.orientation, tempX, tempY) == true) {
 		for (int i = 1; i <= Carrier.shipLength; i++) {
 			//makes the ship placed vertically
 			if (orientation == true) {
@@ -71,7 +78,11 @@ public class Battleship {
 				}
 			}
 		printOceanMap();
-
+	} else {
+		System.out.println("This ship won't fit here. Try again.");
+		}
+	}
+		
 		//Battleship Ship
 				Ship Battleship = new Ship();
 				Battleship.shipLength = 4;
@@ -384,6 +395,8 @@ private static boolean isInputInteger(String input)	{
 	}
 	return isAnInteger;	
 }
+
+
 /*
  * 		// creates Carrier. take input for orientation, starting position, checks if it can fit.
 		Ship Carrier = new Ship();
