@@ -5,61 +5,54 @@ public class Battleship {
     public static int numCols = 10;
     public static String[][] grid = new String[numRows][numCols];
     public static int shipLength = 0;
-    public static boolean orientation;
-    
 	public static void main(String[] args) {
-		//make ship placement for battleship
-		// grid is 10x10 (A-J and 1-10)		
 		
-		//initializes variables
-		createOceanMap();
-		String choice = "";
-		int number = 0;
-		int tempX;
-		int tempY;
-	
-		//Carrier Ship
+		Ship.createOceanMap();
+		/*
+		 * ITS KIND OF DUMB BUT x = vertical AND y = horizontal
+		 */
+		//initializes the ships
 		Ship Carrier = new Ship();
-		shipLength = 5;
-		//Actually deploys the ship
-		System.out.println("Deploying Carrier");
-		deployShip();
-		
-		//Battleship Ship
-		Ship Battleship = new Ship(); // the ship object is supposed to be used for checking if it can fit but I honestly don't know how to do it
-		shipLength = 4;
-		//Actually deploys the ship
-		System.out.println("Deploying Battleship");
-		deployShip();
-		
-		//Cruiser Ship
+		Ship Battleship = new Ship();
 		Ship Cruiser = new Ship();
-		shipLength = 3;
-		//Actually deploys the ship
-		System.out.println("Deploying Cruiser");
-		deployShip();
-		
-		//Submarine Ship
 		Ship Submarine = new Ship();
-		shipLength = 3;
-		//Actually deploys the ship
-		System.out.println("Deploying Submarine");
-		deployShip();
-		
-		//Destroyer Ship
 		Ship Destroyer = new Ship();
-		shipLength = 2;
-		//Actually deploys the ship
-		System.out.println("Deploying Destroyer");
-		deployShip();
+		// A list of the ships in string format for printing in the loop
+		String[] stringShipList = {"Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer"};
+		//A list of the actual ships for calculation in the loop
+		Ship[] shipList = {Carrier, Battleship, Cruiser, Submarine, Destroyer};
+		// A list of ship lengths corresponding to the ships position in the arrays above ^ for calculations
+		int[] shipLengths = {5, 4, 3, 3, 2};
 		
+		//For loop that deploys ships as it runs down the list of 5 ships
+		for (int i = 0; i <= 4; i++) {
+			Ship.shipLength = shipLengths[i];
+			// while loop that is supposed to loop back if hit == true, but it doesn't work
+			do
+			{
+				System.out.println("Deploying " + stringShipList[i]);
+				shipList[i].isHit();
+				System.out.println(stringShipList[i] +" hit == "+ shipList[i].hit + " @ " + shipList[i].y +", "+ shipList[i].x);
+				if (shipList[i].hit==false) 
+				{
+					shipList[i].deployShips();
+				}
+			} while (shipList[i].hit == true);
 		}
+		
+		
+		
+		
+	
+	}
+	
 	public static void deployShip() {
 		Scanner input = new Scanner(System.in);
 		boolean orientation = false;
 		String choice = "";
 		//false = horizontal
 		//true = vertical
+		System.out.println("Ship length is: " + shipLength);
 		System.out.println("What orientation do you want your ship to be placed in? \n[H] Horizontal \n[V] Vertical");
 		choice = getInput(choice);
 		if ("horizontal".equalsIgnoreCase(choice) || "h".equalsIgnoreCase(choice)) {
@@ -73,8 +66,6 @@ public class Battleship {
 		} else {
 			System.out.println("The ship's orientation is: Vertical");
 		}
-		System.out.println(orientation);
-		System.out.println(shipLength);
 
 		System.out.print("Enter X coordinate for your ship: ");
 		int x = input.nextInt();
@@ -115,7 +106,7 @@ public class Battleship {
 			}
 		}
 		printOceanMap();
-		System.out.println("x = "+x + "\ny = " + y);
+		
 	}
 	
 	public static void createOceanMap(){
@@ -184,19 +175,7 @@ public static String getInput(String text) {
 	}
 	return choice;
 }
-public static int getInput2(int number) {
-	Scanner input2 = new Scanner(System.in);
-	int choice2 = 0; 
-	try 
-	{
-		choice2 = input2.nextInt();
-	}
-	catch(Exception e)
-	{
-		e.printStackTrace();
-	}
-	return choice2; 
-	}
+
 private static boolean isInputInteger(String input)	{
 	boolean isAnInteger = true;
 	//all validation cases set this variable to false.
