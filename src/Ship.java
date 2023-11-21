@@ -1,22 +1,36 @@
 import java.util.Scanner;
 
 public class Ship {
-public int x = 0;
 public int y = 0;
-public boolean hit = false;
+public int x = 0;
+public boolean hit = true;
 public static int numRows = 10;
 public static int numCols = 10;
-public static int shipLength = 0;
-public static boolean orientation = false;
+public String shipName;
+public int shipLength;
+public boolean orientation = false;
 public static String[][] grid = new String[numRows][numCols];
 public static String choice = "";
-public static int tempX;
 public static int tempY;
+public static int tempX;
+public int[] savedPositionX = new int [17];
+public int[] savedPositionY = new int [17];
+
+
+ // use this to store the position of the ship at each location
+public Ship(String name, int X, int Y, int size) {
+	this.shipName = name;
+	this.x = X;
+	this.y = Y;
+	this.shipLength = size;
+
+}
 
 public String toString() {
-	return "("+ x +", "+ y +")";
+	return "("+ x+", "+ y+")";
 	}
-
+//isHit doesn't work properly most likely because it checks only the beginning and end. 
+//If there is something in the middle, even if it returns hit = true, it will go back to false if the start and end are clear.
 public boolean isHit() {
 	//this Ship method checks if the ship is overlapping with another ship or is out of bounds (hit=true, else false) and returns the boolean hit
 	Scanner input = new Scanner(System.in);
@@ -35,61 +49,75 @@ public boolean isHit() {
 	if (orientation == true) {
 		System.out.println("The ship's orientation is: Vertical");
 	}
-
 	System.out.print("Enter X coordinate for your ship: ");
-	x = input.nextInt();
-	tempX = x;
+	x= input.nextInt();
+	tempX= x;
 	System.out.print("Enter Y coordinate for your ship: ");
-	y = input.nextInt();
-	tempY = y;
+	y= input.nextInt();
+	tempY= y;
+
 	// false orientation = horizontal(y). true orientation = vertical(x).
 	
 
 	if (orientation == true) {
-		for (int i = 1; i <= shipLength; i++) 
+		System.out.println("CHECKING VERTICAL SPACE");
+		for (int i = 0; i < shipLength; i++) 
 		{
-			if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y].equals(" "))) //makes ship take up space on grid if empty
+			
+			if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && grid[y][x] == "@" 
+					|| (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && grid[tempY][tempX] == "@")
+			{
+	        	System.out.println("You can't place ships at " + x+ ", " + x);
+				hit = true;
+				break;
+			}else if((y< 0 || y>= numRows) || (x< 0 || x>= numCols)) 
+			{
+	        	//if there isn't a valid spot because it's out of bounds
+	        	System.out.println("You can't place ships outside the " + numRows + " bx" + numCols + " grid");
+				hit = true;
+			}
+			else if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && (grid[y][x].equals(" "))
+					 && (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && (grid[tempY][tempX].equals(" "))) 
+				//makes ship take up space on grid if empty
 	        {
 			//if there is a valid spot, places an "@" in the point on the grid to show it's occupied
 				hit = false;
 	        } 
-			else if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && grid[x][y] == "@") 
-			{
-	        	System.out.println("You can't place ships at " + y + ", " + x);
-				hit = true;
-			}else if((x < 0 || x >= numRows) || (y < 0 || y >= numCols)) 
-			{
-	        	//if there isn't a valid spot because it's out of bounds
-	        	System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
-				hit = true;
-			}
-			x++;
+// && x== shipPosition[1][i] && y==shipPosition[0][i]
+			y++;
 			
 		}
-	}
+	}else
 	if (orientation == false) 
 	{
-		for (int i = 1; i <= shipLength; i++) 
+		System.out.println("CHECKING HORIZONTAL SPACE");
+		for (int i = 0; i < shipLength; i++) 
 		{
-			if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y].equals(" "))) //makes ship take up space on grid if empty
+			
+			if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && grid[y][x].equals( "@")
+					|| (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && grid[tempY][tempX] == "@") 
+			{
+	        	System.out.println("You can't place ships at " + x+ ", " + x);
+				hit = true;
+				break;
+			}else if((y< 0 || y>= numRows) || (x< 0 || x>= numCols)) 
+			{
+	        	//if there isn't a valid spot because it's out of bounds
+	        	System.out.println("You can't place ships outside the " + numRows + " bx" + numCols + " grid");
+				hit = true;
+			}
+			else if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && (grid[y][x].equals(" "))
+					&& (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && (grid[tempY][tempX].equals(" "))) 
+				//makes ship take up space on grid if empty
 	        {
 			//if there is a valid spot, places an "@" in the point on the grid to show it's occupied
 				hit = false;
 	        } 
-			else if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && grid[x][y] == "@") 
-			{
-	        	System.out.println("You can't place ships at " + y + ", " + x);
-				hit = true;
-			}else if((x < 0 || x >= numRows) || (y < 0 || y >= numCols)) 
-			{
-	        	//if there isn't a valid spot because it's out of bounds
-	        	System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
-				hit = true;
-			}
-			y++;
+			x++;
 		}
 	}
-	
+	System.out.println("hit(inside isHit) == " + hit);
+
 	return hit;
 }
 
@@ -130,14 +158,14 @@ public static void printOceanMap(){
     System.out.println();
 
     //Middle section of Ocean Map
-    for(int x = 0; x < grid.length; x++) {
-        System.out.print(x + "|");
+    for(int y= 0; y< grid.length; y++) {
+        System.out.print(y + "|");
 
-        for (int y = 0; y < grid[x].length; y++){
-            System.out.print(grid[x][y]);
+        for (int x= 0; x< grid[y].length; x++){
+            System.out.print(grid[y][x]);
         }
 
-        System.out.println("|" + x);
+        System.out.println("|" + y);
     }
 
     //Last section of Ocean Map
@@ -148,28 +176,38 @@ public static void printOceanMap(){
 }
 
 public void deployShips() {
-	x = tempX;
-	y = tempY;
-	for (int i = 1; i <= shipLength; i++) {
+	y= tempY;
+	x= tempX;
+	System.out.println("DEPLOYING");
+	for (int i = 0; i < shipLength; i++) {
 		//makes the ship placed vertically
 		if (orientation == true) {
-			if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y].equals(" "))) //makes ship take up space on grid if empty
+			if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && (grid[y][x].equals(" "))) //makes ship take up space on grid if empty
 		        {
 				//if there is a valid spot, places an "@" in the point on the grid to show it's occupied
-				grid[x][y] =   "@";
+				grid[y][x] =   "@";
+				System.out.println("("+ x+", "+ y+")");
+				savedPositionX[i] = x;
+				savedPositionY[i] = y;
+				System.out.println(savedPositionX[i]+", "+savedPositionY[i]);
 		        }
 
-		x++;
+		y++;
 		
 		} 
 		if (orientation == false) {
-			if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y].equals(" "))) //makes ship take up space on grid if empty
+			if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && (grid[y][x].equals(" ")) ) //makes ship take up space on grid if empty
 		        {
 				//if there is a valid spot, places an "@" in the point on the grid to show it's occupied
-				grid[x][y] =   "@";
+				grid[y][x] =   "@";
+				System.out.println("("+ x+", "+ y+")");
+				savedPositionX[i] = x;
+				savedPositionY[i] = y;
+				System.out.println(savedPositionX[i]+", "+savedPositionY[i]);
+
 		        }
 		        
-		y++;
+		x++;
 		}
 	}
 	printOceanMap();
