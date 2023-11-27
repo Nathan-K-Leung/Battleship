@@ -75,6 +75,7 @@ public boolean isHit() {
 	        	//if there isn't a valid spot because it's out of bounds
 	        	System.out.println("You can't place ships outside the " + numRows + " bx" + numCols + " grid");
 				hit = true;
+				break;
 			}
 			else if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && (grid[y][x].equals(" "))
 					 && (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && (grid[tempY][tempX].equals(" "))) 
@@ -105,6 +106,7 @@ public boolean isHit() {
 	        	//if there isn't a valid spot because it's out of bounds
 	        	System.out.println("You can't place ships outside the " + numRows + " bx" + numCols + " grid");
 				hit = true;
+				break;
 			}
 			else if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && (grid[y][x].equals(" "))
 					&& (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && (grid[tempY][tempX].equals(" "))) 
@@ -189,7 +191,6 @@ public void deployShips() {
 				System.out.println("("+ x+", "+ y+")");
 				savedPositionX[i] = x;
 				savedPositionY[i] = y;
-				System.out.println(savedPositionX[i]+", "+savedPositionY[i]);
 		        }
 
 		y++;
@@ -203,8 +204,6 @@ public void deployShips() {
 				System.out.println("("+ x+", "+ y+")");
 				savedPositionX[i] = x;
 				savedPositionY[i] = y;
-				System.out.println(savedPositionX[i]+", "+savedPositionY[i]);
-
 		        }
 		        
 		x++;

@@ -38,10 +38,7 @@ public class Battleship {
 
 		}
 		
-		
-		
-		
-	
+
 	}
 	
 
