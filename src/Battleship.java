@@ -3,7 +3,11 @@ import java.util.Scanner;
 public class Battleship {
 
 	public static void main(String[] args) {
-		
+		Game game = new Game();
+		game.run();
+		/*
+		 * 
+		 */
 		Ship.createOceanMap();
 
 		//initializes the ships
@@ -22,7 +26,7 @@ public class Battleship {
 		// A list of ship lengths corresponding to the ships position in the arrays above ^ for calculations
 		//For loop that deploys ships as it runs down the list of 5 ships
 		
-		for (int i = 0; i <= 4; i++) {
+		for (int i = 0; i < 5; i++) {
 
 			// while loop that is supposed to loop back if hit == true, but it doesn't work
 			do
@@ -37,7 +41,8 @@ public class Battleship {
 			} while (shipList[i].hit == true);
 
 		}
-		
+
+
 
 	}
 	

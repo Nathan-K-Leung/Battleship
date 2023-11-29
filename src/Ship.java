@@ -67,13 +67,13 @@ public boolean isHit() {
 			if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && grid[y][x] == "@" 
 					|| (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && grid[tempY][tempX] == "@")
 			{
-	        	System.out.println("You can't place ships at " + x+ ", " + x);
+	        	System.out.println("You can't place ships at " + x+ ", " + y);
 				hit = true;
 				break;
 			}else if((y< 0 || y>= numRows) || (x< 0 || x>= numCols)) 
 			{
 	        	//if there isn't a valid spot because it's out of bounds
-	        	System.out.println("You can't place ships outside the " + numRows + " bx" + numCols + " grid");
+	        	System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
 				hit = true;
 				break;
 			}
@@ -98,13 +98,13 @@ public boolean isHit() {
 			if((y>= 0 && y< numRows) && (x>= 0 && x< numCols) && grid[y][x].equals( "@")
 					|| (tempY>= 0 && tempY< numRows) && (tempX>= 0 && tempX< numCols) && grid[tempY][tempX] == "@") 
 			{
-	        	System.out.println("You can't place ships at " + x+ ", " + x);
+	        	System.out.println("You can't place ships at " + x+ ", " + y);
 				hit = true;
 				break;
 			}else if((y< 0 || y>= numRows) || (x< 0 || x>= numCols)) 
 			{
 	        	//if there isn't a valid spot because it's out of bounds
-	        	System.out.println("You can't place ships outside the " + numRows + " bx" + numCols + " grid");
+	        	System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
 				hit = true;
 				break;
 			}
@@ -118,7 +118,7 @@ public boolean isHit() {
 			x++;
 		}
 	}
-	System.out.println("hit(inside isHit) == " + hit);
+	//System.out.println("hit(inside isHit) == " + hit);
 
 	return hit;
 }
