@@ -6,9 +6,8 @@ public class Battleship {
 		Game game = new Game();
 		game.run();
 		/*
-		 * 
-		 */
-		Ship.createOceanMap();
+		 * (OLD CODE)
+		 * Ship.createOceanMap();
 
 		//initializes the ships
 
@@ -41,6 +40,8 @@ public class Battleship {
 			} while (shipList[i].hit == true);
 
 		}
+		 */
+		
 
 
 

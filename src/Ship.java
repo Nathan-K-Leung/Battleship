@@ -4,20 +4,97 @@ public class Ship {
 public int y = 0;
 public int x = 0;
 public boolean hit = true;
-public static int numRows = 10;
-public static int numCols = 10;
-public String shipName;
-public int shipLength;
-public boolean orientation = false;
-public static String[][] grid = new String[numRows][numCols];
+//public static int numRows = 10;
+//public static int numCols = 10;
+//public String shipName;
+//public int shipLength;
+//public boolean orientation = false;
+//public static String[][] grid = new String[numRows][numCols];
 public static String choice = "";
 public static int tempY;
 public static int tempX;
-public int[] savedPositionX = new int [17];
-public int[] savedPositionY = new int [17];
+	int row;
+	int col;
+	boolean orientation; // true = vertical
+	int size;
+	String letter, name;
 
+/* TODO SHIP NOTES
+ * Physical
+ * 	Placed on the ocean
+ * 		Location: (row & column) : int x, y Or row, column.
+ * 		Orientation: (Horizontal || Vertical) : boolean vertical = true
+ * 		Size : int 
+ *		Display "Look" : Letter "B" for batttleship, etc.
+ * 	Verbs
+ *  	Place ship : public void (row, column, orientation)
+ * 		Check for hit : public boolean (row, column)
+ *  Utility
+ *  	Display Ship : public String[][] (String[][])
+ */
+	public Ship(int s, String n, String l) {
+		size = s;
+		name = n;
+		letter = l;	
+	}
+	
+	public void placeShips(Shot loc, boolean or) {
+		orientation = or;
+		row = loc.getY();
+		col = loc.getX();
+	}
+	
+	public boolean checkHit(Shot loc) {
+		//checking each spot to see if we hit
+		for (int c = 0; c < size; c++)
+		{
+			//deal with orientation
+			if (orientation = true)
+			{
+				if(loc.equals(new Shot(col, (row + c))))
+				{
+					return true;
+				}
+			}else 
+			{
+				if(loc.equals(new Shot((col + c), row)))
+				{
+					return true;
+				}	
+			}
+		}
+		return false;
+	}
 
- // use this to store the position of the ship at each location
+	public String[][] renderShip(String[][]field){
+		//deal with orientation
+		for (int c = 0; c < size; c++)
+			{
+			if (orientation)
+				{
+					field[col+c][row] = " " + letter;
+				}
+			else 
+				{
+					field[col][row+c] = " " + letter;
+				}
+			}
+		return field;
+	}
+	
+	private void renderOcean() {
+		//update with changes to the source on github
+		for(Ship s : deployedShips) 
+		{
+			s.renderShip(ocean);
+		}
+		for(Shot s : opShots) 
+		{
+			s.display(ocean);
+		}
+	}
+/*
+ * // use this to store the position of the ship at each location (OLD CODE)
 public Ship(String name, int X, int Y, int size) {
 	this.shipName = name;
 	this.x = X;
@@ -189,8 +266,7 @@ public void deployShips() {
 				//if there is a valid spot, places an "@" in the point on the grid to show it's occupied
 				grid[y][x] =   "@";
 				System.out.println("("+ x+", "+ y+")");
-				savedPositionX[i] = x;
-				savedPositionY[i] = y;
+				
 		        }
 
 		y++;
@@ -202,8 +278,7 @@ public void deployShips() {
 				//if there is a valid spot, places an "@" in the point on the grid to show it's occupied
 				grid[y][x] =   "@";
 				System.out.println("("+ x+", "+ y+")");
-				savedPositionX[i] = x;
-				savedPositionY[i] = y;
+				
 		        }
 		        
 		x++;
@@ -211,4 +286,6 @@ public void deployShips() {
 	}
 	printOceanMap();
 }
+ */
+ 
 }
