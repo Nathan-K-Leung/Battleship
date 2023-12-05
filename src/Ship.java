@@ -18,6 +18,8 @@ public static int tempX;
 	boolean orientation; // true = vertical
 	int size;
 	String letter, name;
+	private int hits;
+	
 
 /* TODO SHIP NOTES
  * Physical
@@ -33,66 +35,53 @@ public static int tempX;
  *  	Display Ship : public String[][] (String[][])
  */
 	public Ship(int s, String n, String l) {
-		size = s;
-		name = n;
-		letter = l;	
-	}
-	
-	public void placeShips(Shot loc, boolean or) {
-		orientation = or;
-		row = loc.getY();
-		col = loc.getX();
-	}
-	
-	public boolean checkHit(Shot loc) {
-		//checking each spot to see if we hit
-		for (int c = 0; c < size; c++)
-		{
-			//deal with orientation
-			if (orientation = true)
-			{
-				if(loc.equals(new Shot(col, (row + c))))
-				{
-					return true;
-				}
-			}else 
-			{
-				if(loc.equals(new Shot((col + c), row)))
-				{
-					return true;
-				}	
-			}
-		}
-		return false;
-	}
+ 		size = s;
+ 		name = n;
+ 		letter = l;
+ 	}
 
-	public String[][] renderShip(String[][]field){
-		//deal with orientation
-		for (int c = 0; c < size; c++)
-			{
-			if (orientation)
-				{
-					field[col+c][row] = " " + letter;
-				}
-			else 
-				{
-					field[col][row+c] = " " + letter;
-				}
-			}
-		return field;
-	}
-	
-	private void renderOcean() {
-		//update with changes to the source on github
-		for(Ship s : deployedShips) 
-		{
-			s.renderShip(ocean);
-		}
-		for(Shot s : opShots) 
-		{
-			s.display(ocean);
-		}
-	}
+ 	public void placeShip(Shot loc, boolean or) {
+ 		orientation = or;
+ 		row = loc.getY();
+ 		col = loc.getX();
+ 	}
+ 	public boolean checkHit(Shot loc) {
+ 		//checking each spot to see if we hit.
+
+ 		for(int c = 0; c < size; c++) {
+ 			//deal with orientation
+ 			if(orientation) {
+ 				if(loc.equals(new Shot(col,(row+c)))) {
+ 					hits++;
+ 					return true;
+ 				}
+ 			}else {
+ 				if(loc.equals(new Shot((col+c),row))) {
+ 					hits++;
+ 					return true;
+ 				}
+ 			}
+ 		}
+ 		return false;
+ 	}
+ 	public boolean isAlive() {
+ 		if (hits == size) {
+ 			return false;
+ 		}
+ 		return true;
+ 	}
+ 	public String[][] renderShip(String[][] field){
+ 		for(int c = 0; c < size; c++) {
+ 			//deal with orientation
+ 			if(orientation) {
+ 				field[col+c][row] = letter;
+ 			}else {
+ 				field[col][row+c] = " "+letter;
+ 			}
+ 		}
+
+ 		return field;
+ 	}
 /*
  * // use this to store the position of the ship at each location (OLD CODE)
 public Ship(String name, int X, int Y, int size) {
