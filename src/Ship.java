@@ -1,18 +1,6 @@
 import java.util.Scanner;
 
 public class Ship {
-public int y = 0;
-public int x = 0;
-public boolean hit = true;
-//public static int numRows = 10;
-//public static int numCols = 10;
-//public String shipName;
-//public int shipLength;
-//public boolean orientation = false;
-//public static String[][] grid = new String[numRows][numCols];
-public static String choice = "";
-public static int tempY;
-public static int tempX;
 	int row;
 	int col;
 	boolean orientation; // true = vertical

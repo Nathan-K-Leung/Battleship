@@ -10,68 +10,72 @@ public class Player {
 	ArrayList<Shot> myShots = new ArrayList<Shot>();
 	ArrayList<Shot> opShots = new ArrayList<Shot>();
 	Player opponent;
+	
 	public Player() {
 		init();
-		Shot s = new Shot(3,0);
-		s.resolve(false);
-		//adding to a collection
-		myShots.add(s);
+		//debug coe here
+		// Ship [name] = new Ship(length, [name], letter);
+		Ship ac = new Ship(5,"Aircraft Carrier","A");
+		//shipName.placeShip(new Shot(row, col), orientation);
+		ac.placeShip(new Shot(1,1), false);
+		deployedShips.add(ac);
 		
-		opShots.add(s);
 		Ship battle = new Ship(4,"BattleShip","B");
 		battle.placeShip(new Shot(4,3), false);
 		deployedShips.add(battle);
-		renderOcean();
-		displayBoard(ocean);
-	}	
+		
+		Ship cruiser = new Ship(3,"Cruiser","C");
+		cruiser.placeShip(new Shot(6,3), true);
+		deployedShips.add(cruiser);
+		
+		Ship sub = new Ship(3,"Submarine","S");
+		sub.placeShip(new Shot(5,5), false);
+		deployedShips.add(sub);
+		
+		Ship destroyer = new Ship(2,"Destroyer","D");
+		destroyer.placeShip(new Shot(6,6), false);
+		deployedShips.add(destroyer);
+
+		}	
 	
 	private Shot getLocation(String text) {
 		String choice = null;
 		Scanner input = new Scanner(System.in);
 		System.out.println(text);
-		try
+		try 
 		{
 			choice = input.nextLine();
-		}
-		catch(Exception e)
-		{
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		//cuts off the first char of input, converts using ASCII
 		char letter = choice.charAt(0);
 		int row = (int)(letter - 'A');
-		int col = -1;
-		// parses the int part of the input
-		try
+		int col=-1;
+		try 
 		{
-			col = Integer.parseInt(choice.substring(1));
-		}
-		catch(Exception e)
-		{
+			col = Integer.parseInt(choice.substring(1))-1;
+		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		//String.charAt(#);
-		//String.subString(#);
-		Shot loc = new Shot (col, row);
+		Shot loc = new Shot(col,row);
 		return loc;
 	}
 	
 	private boolean checkGuess(Shot opfor) {
 		for(Ship s : deployedShips) 
 		{
-			if (s.checkHit(opfor))
+			if(s.checkHit(opfor)) 
 			{
 				opfor.resolve(true);
 				opShots.add(opfor);
-				if(s.isAlive()) 
+				if(!s.isAlive()) 
 				{
-				System.out.println(s.name+" is sunk");
-				} 
-				else
+					System.out.println(s.name+" is sunk!");
+				}else 
 				{
-				System.out.println(s.name+" is hit");
+					System.out.println(s.name+" is hit!");
 				}
-			return true;
+				return true;
 			}
 		}
 		System.out.println("Shot missed");
@@ -109,8 +113,9 @@ public class Player {
 		return false;
 	}
 	
-	public void setOpforPlayer() {
-		
+	public void setOpfor(Player p) {
+		opponent = p;
+
 	}
 	
 	private void init() {
@@ -150,7 +155,7 @@ public class Player {
 			System.out.print((char)((short)letter+y));
 			
 			for(int x = 0; x < 10; x++) {
-				System.out.print(board[y][x] + " ");
+				System.out.print(board[y][x]);
 			}
 			System.out.print("\n");
 		}
