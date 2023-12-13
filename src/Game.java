@@ -4,7 +4,11 @@ public class Game {
 	public void run() {
 		//Player array
 		Player[] players = new Player [2];
+		System.out.println("Player 1 deploy your ship");
 		players[0] = new Player();
+		waitHere();
+		clearScreen();
+		System.out.println("Player 2 deploy your ship");
 		players[1] = new Player();
 		players[0].setOpfor(players[1]);
 		players[1].setOpfor(players[0]);

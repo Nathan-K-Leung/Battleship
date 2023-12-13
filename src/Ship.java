@@ -7,6 +7,8 @@ public class Ship {
 	int size;
 	String letter, name;
 	private int hits;
+	boolean sunk = true;
+	public boolean setup = true;
 	
 
 /* TODO SHIP NOTES
@@ -28,8 +30,8 @@ public class Ship {
  		letter = l;
  	}
 
- 	public void placeShip(Shot loc, boolean or) {
- 		orientation = or;
+ 	public void placeShip(Shot loc, boolean ori) {
+ 		orientation = ori;
  		row = loc.getY();
  		col = loc.getX();
  	}
@@ -40,12 +42,18 @@ public class Ship {
  			//deal with orientation
  			if(orientation) {
  				if(loc.equals(new Shot(col,(row+c)))) {
+ 					if(!setup) 
+ 					{
  					hits++;
+ 					}
  					return true;
  				}
  			}else {
  				if(loc.equals(new Shot((col+c),row))) {
+ 					if(!setup) 
+ 					{
  					hits++;
+ 					}
  					return true;
  				}
  			}
@@ -62,7 +70,7 @@ public class Ship {
  		for(int c = 0; c < size; c++) {
  			//deal with orientation
  			if(orientation) {
- 				field[col+c][row] = letter;
+ 				field[col+c][row] = " "+letter;
  			}else {
  				field[col][row+c] = " "+letter;
  			}
