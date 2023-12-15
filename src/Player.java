@@ -1,6 +1,6 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
-
 
 public class Player {
 	String[][] ocean = new String[10][10];
@@ -13,230 +13,192 @@ public class Player {
 	
 	public Player() {
 		init();
+		deployShips();
 		//debug code here
-		// Ship [name] = new Ship(length, [name], letter);
 		/*
-		 * 	Ship ac = new Ship(5,"Aircraft Carrier","A");
-		//shipName.placeShip(new Shot(row(A-J), col(1-10), orientation);
-		ac.placeShip(new Shot(0,0), false);
+		Ship ac = new Ship(5,"Aircraft Carier","A");
+		Ship battle = new Ship(4,"BattleShip","B");
+		Ship cruiser = new Ship(3,"Cruiser","C");
+		Ship sub = new Ship(3,"Submarine","S");
+		Ship des = new Ship(2,"Destroyer","D");
+		ac.placeShip(new Shot(0,0), true);
+		battle.placeShip(new Shot(4,3), false);
+		cruiser.placeShip(new Shot(6,6), false);
+		sub.placeShip(new Shot(4,1), true);
+		des.placeShip(new Shot(7,2), false);
 		deployedShips.add(ac);
-		
-		Ship battle = new Ship(4,"BattleShip","B");
-		battle.placeShip(new Shot(1,0), false);
 		deployedShips.add(battle);
-		
-		Ship cruiser = new Ship(3,"Cruiser","C");
-		cruiser.placeShip(new Shot(2,1), true);
 		deployedShips.add(cruiser);
-		
-		Ship sub = new Ship(3,"Submarine","S");
-		sub.placeShip(new Shot(6,1), false);
 		deployedShips.add(sub);
-		
-		Ship destroyer = new Ship(2,"Destroyer","D");
-		destroyer.placeShip(new Shot(6,6), false);
-		deployedShips.add(destroyer);
-		 */
-	
-
-		}	
-	
+		deployedShips.add(des);
+		*/
+	}
 	private void deployShips() {
+		//creates our ships and places them in dry dock.
 		ArrayList<Ship> dryDock = new ArrayList<Ship>();
-		Ship ac = new Ship(5,"Aircraft Carrier","A");
+		Ship ac = new Ship(5,"Aircraft Carier","A");
 		Ship battle = new Ship(4,"BattleShip","B");
 		Ship cruiser = new Ship(3,"Cruiser","C");
 		Ship sub = new Ship(3,"Submarine","S");
-		Ship destroyer = new Ship(2,"Destroyer","D");
+		Ship des = new Ship(2,"Destroyer","D");
 		dryDock.add(ac);
 		dryDock.add(battle);
 		dryDock.add(cruiser);
 		dryDock.add(sub);
-		dryDock.add(destroyer);
-		//loop through dryDock and place each ship
-		for (Ship s : dryDock)
-		{
+		dryDock.add(des);
+		//loop through dry dock and place each ship
+		for(Ship s : dryDock) {
 			renderOcean();
+			displayBoard(ocean);
 			boolean validate = true;
-			while(validate)
-			{
-				//Get location
-				Shot loc = getLocation("Enter the placement for " + s.name);
-				//Get orientation
-				boolean orientation = getOrientation();
+			//loops while validate = true
+			while(validate) {
+				//get location
+				Shot loc = getLocation("Enter the placement for "+ s.name);
+				//get orientation
+				boolean ori = getOrientation();
 				//check for ship in bounds
-				validate = checkMapBounds(s, orientation, loc);
-				//check for collisions
-				if(validate) 
-				{
-					validate = checkCollisions(s, orientation, loc);
-					if (validate) 
-					{
-						System.out.println(s.name + " has been placed.");
-						s.placeShip(loc, orientation);
+				validate = checksMapBounds(s,ori,loc);
+				//check for collisions 
+				if(validate) {
+					validate = checkCollisions(s,ori,loc);
+					if(validate) {
+						System.out.println(s.name+" has been placed.");
+						s.placeShip(loc, ori);
 						deployedShips.add(s);
 						validate = false;
-					} else 
-					{
-						System.out.println("This ship will collide with another ship, try again.");
+					}else {
+						System.out.println("This ship will collide with another already place ship, try again.");
 						validate = true;
 					}
-				} else
-				{
+				}else {
 					System.out.println("The ship will not fit in this location, try again.");
 					validate = true;
 				}
+				
 			}
 		}
-		//we are done with setup. Change state to play
-		for(Ship s : deployedShips)
-		{
-			s.setup=false;
+		//We are done with setup. Change state to play
+		for(Ship s : deployedShips) {
+			s.setup = false;
 		}
+		renderOcean();
+		displayBoard(ocean);
 	}
 	
-	
-
+	private boolean checkCollisions(Ship s,boolean ori,Shot loc) {
+		//if deployed ships is empty return true
+		if(deployedShips.isEmpty()) {
+			return true;
+		}else {
+			for(Ship a : deployedShips) {
+				if(ori) {//vertical
+					for(int b = loc.getY();b <loc.getY()+s.size; b++) {
+						if(a.checkHit(new Shot(loc.getX(),b))) {
+							return false;
+						}
+					}
+				}else {
+					for(int b = loc.getX();b <loc.getX()+s.size; b++) {
+						if(a.checkHit(new Shot(b,loc.getY()))) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+	private boolean checksMapBounds(Ship s,boolean ori,Shot loc) {
+		if(ori) {
+			//vertical
+			int endPoint = loc.getY()+s.size - 1;
+			return endPoint < 10;
+		}else {
+			//horizontal
+			int endPoint = loc.getX() +s.size -1;
+			return endPoint < 10;
+		}
+	}
 	private boolean getOrientation() {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("[0] Vertical \n[1] Horizontal");
 		int response = scan.nextInt();
 		return response % 2 == 0;
 	}
-
-	private boolean checkMapBounds(Ship s, boolean orientation, Shot loc) {
-		if(orientation) 
-		{
-			//vertical
-			int endPoint = loc.getY()+s.size - 1;
-			return endPoint<10;
-		}
-		else 
-		{
-			//horizontal
-			int endPoint = loc.getX()+s.size - 1;
-			return endPoint<10;
-		}
-	}
-	
-	private boolean checkCollisions(Ship s, boolean orientation, Shot loc) {
-		//if deployed ships is empty return true
-		if(deployedShips.isEmpty())
-		{
-			return true;
-		} else 	//If we have ships deployed, then loop through the possible locations 
-				//to see if we hit
-		{
-			for(Ship a : deployedShips)
-			{
-				if(orientation) // is vertical
-				{
-					for(int b = loc.getY(); b < loc.getY() + s.size; b++) 
-					{
-						if(s.checkHit(new Shot(loc.getX(), b)))
-						{
-							return false;
-						}
-					}
-				} else //if horizontal
-				{
-					for(int b = loc.getX(); b < loc.getX() + s.size; b++) 
-					{
-						if(s.checkHit(new Shot(b, loc.getY())))
-						{
-							return false;
-						}
-					}
-				}
-			}
-		}
-		
-		return true;
-	}
-
 	private Shot getLocation(String text) {
 		String choice = null;
 		Scanner input = new Scanner(System.in);
+		int row = 100;
+		int col = 100;
 		System.out.println(text);
-		try 
-		{
+		try {
 			choice = input.nextLine();
 			choice = choice.toUpperCase();
 		}catch(Exception e) {
+			System.out.println("Bad input letter. Try again.");
+			choice = input.nextLine();
 			e.printStackTrace();
 		}
 		char letter = choice.charAt(0);
-		int row = (int)(letter - 'A');
-		int col=-1;
-		try 
-		{
+		row = (int)(letter - 'A');
+		col=-1;
+		try {
 			col = Integer.parseInt(choice.substring(1))-1;
 		}catch(Exception e) {
+			System.out.println("Bad input number. Try again.");
+			choice = input.nextLine();
 			e.printStackTrace();
 		}
 		Shot loc = new Shot(col,row);
 		return loc;
-	}
+		}
 	
-	private boolean checkGuess(Shot opfor) {
-		for(Ship s : deployedShips) 
-		{
-			if(s.checkHit(opfor)) 
-			{
+	public boolean checkGuess(Shot opfor) {
+		for(Ship s : deployedShips) {
+			if(s.checkHit(opfor)) {
 				opfor.resolve(true);
 				opShots.add(opfor);
-				if(!s.isAlive()) 
-				{
+				if(!s.isAlive()) {
 					System.out.println(s.name+" is sunk!");
-				}else 
-				{
+				}else {
 					System.out.println(s.name+" is hit!");
 				}
 				return true;
 			}
 		}
-		System.out.println("Shot missed");
+		System.out.println("Shot missed.");
 		opfor.resolve(false);
 		opShots.add(opfor);
 		return false;
 	}
-	
 	public void playTurn() {
-	//Display UI
-	renderRadar();
-	renderOcean();
-	System.out.println(" Radar:");
-	displayBoard(radar);
-	System.out.println(" Ocean:");
-	displayBoard(ocean);
-	//Ask for Shot
-	Shot s = getLocation("Enter your guess: ");
-	//Check the Shot
-	s.resolve(opponent.checkGuess(s));
-	myShots.add(s);
-	//Display results
-	renderRadar();
-	renderOcean();
-	System.out.println(" Radar:");
-	displayBoard(radar);
-	System.out.println(" Ocean:");
-	displayBoard(ocean);
+		//Display UI
+		renderRadar();
+		renderOcean();
+		displayBoard(radar);
+		displayBoard(ocean);
+		//Ask for Shot
+		Shot s = getLocation("Enter your guess: ");
+		//Check the shot
+		s.resolve(opponent.checkGuess(s));
+		myShots.add(s);
+		//Display results
+		renderRadar();
+		renderOcean();
+		displayBoard(radar);
+		displayBoard(ocean);
 	}
-	
 	public boolean stillAlive() {
-		for(Ship s : deployedShips)
-		{
-			if(s.isAlive()) 
-			{
+		for(Ship s : deployedShips) {
+			if(s.isAlive()) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
 	public void setOpfor(Player p) {
 		opponent = p;
-
 	}
 	
 	private void init() {
@@ -246,20 +208,18 @@ public class Player {
 	private void initBoard(String[][] board) {
 		for(int y = 0; y < 10; y++) {
 			for(int x = 0; x < 10; x++) {
-				board[y][x] = " ";
+				board[y][x] = "  ";
 			}
 		}
 		
-	}
+	}	
 	private void renderRadar() {
-		//for each loop
-		//collection: something like an ArrayList, an item in a collection, a definition in a dictionary.
+		//For each loop
 		//for(dType yourName : collectionName){}
-		for(Shot s : myShots)
-		{
+		for(Shot s : myShots) {
 			s.display(radar);
 		}
-	}
+	}	
 	private void renderOcean() {
 		for(Ship s : deployedShips) {
 			s.renderShip(ocean);
