@@ -140,13 +140,27 @@ public class Player {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		if(choice.isEmpty()) {
+			Shot loc = new Shot(11,11); 
+			return loc; 
+		}
 		int length = choice.length(); 
+		//Checks if user inputed more than max (A10) characters possible. 
 		if (length>3) {
 			Shot loc = new Shot(11,11); 
 			return loc; 
 		}
 		char letter = choice.charAt(0);
 		int number = choice.codePointAt(1);
+		//Check if there's a third input. If yes, check if it's zero.  
+		if (length == 3) {
+			int zero = choice.codePointAt(2);
+			if (zero!=48) {
+				//Return location that will error out when checking map bounds, causing a reset. 
+				Shot loc = new Shot (11,11);
+				return loc; 
+			}
+		}
 		
 		//Check if the user inputed a letter for the first character and number for the second.
 		if (letter>64 & letter<75 & number>48 & number<58) {
@@ -160,8 +174,7 @@ public class Player {
 		Shot loc = new Shot(col,row);
 		return loc;
 		}else
-			System.out.println("Dragons in my code? What.");
-		return new Shot(1,1); 
+			return new Shot(11,11); 
 	}
 	public boolean checkGuess(Shot opfor) {
 		for(Ship s : deployedShips) {
@@ -189,6 +202,9 @@ public class Player {
 		displayBoard(ocean);
 		//Ask for Shot
 		Shot s = getLocation("Enter your guess: ");
+		while (s.getX() == (11)) {
+			s = getLocation("Enter your guess: ");
+		}
 		//Check the shot
 		s.resolve(opponent.checkGuess(s));
 		myShots.add(s);
