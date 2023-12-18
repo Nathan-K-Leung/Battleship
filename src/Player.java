@@ -10,7 +10,6 @@ public class Player {
 	ArrayList<Shot> myShots = new ArrayList<Shot>();
 	ArrayList<Shot> opShots = new ArrayList<Shot>();
 	Player opponent;
-	
 	public Player() {
 		init();
 		deployShips();
@@ -51,12 +50,12 @@ public class Player {
 			renderOcean();
 			displayBoard(ocean);
 			boolean validate = true;
-			//loops while validate = true
 			while(validate) {
 				//get location
-				Shot loc = getLocation("Enter the placement for "+ s.name);
+				Shot loc = getLocation("Enter the placement for "+ s.name+".");
 				//get orientation
-				boolean ori = getOrientation();
+				boolean ori = false;
+				ori = getOrientation();
 				//check for ship in bounds
 				validate = checksMapBounds(s,ori,loc);
 				//check for collisions 
@@ -68,7 +67,7 @@ public class Player {
 						deployedShips.add(s);
 						validate = false;
 					}else {
-						System.out.println("This ship will collide with another already place ship, try again.");
+						System.out.println("This ship will collide with another already placed ship, try again.");
 						validate = true;
 					}
 				}else {
@@ -110,9 +109,15 @@ public class Player {
 		return true;
 	}
 	private boolean checksMapBounds(Ship s,boolean ori,Shot loc) {
+	//Checks if start point is out of bounds. 
+		if(loc.getY()>10||loc.getX()>9) {
+			return false; 
+		}
 		if(ori) {
+			//Fails if integer is out of bounds like A11. Works if J10 
 			//vertical
 			int endPoint = loc.getY()+s.size - 1;
+			//Greater than 10 false, less than true. 
 			return endPoint < 10;
 		}else {
 			//horizontal
@@ -129,31 +134,39 @@ public class Player {
 	private Shot getLocation(String text) {
 		String choice = null;
 		Scanner input = new Scanner(System.in);
-		int row = 100;
-		int col = 100;
 		System.out.println(text);
 		try {
 			choice = input.nextLine();
 			choice = choice.toUpperCase();
 		}catch(Exception e) {
-			System.out.println("Bad input letter. Try again.");
-			choice = input.nextLine();
 			e.printStackTrace();
 		}
+		int length = choice.length(); 
+		if (length>3) {
+			Shot loc = new Shot(11,11); 
+			return loc; 
+		}
+		if (choice.isEmpty() == true) {
+			choice = "Z100";
+		}
 		char letter = choice.charAt(0);
-		row = (int)(letter - 'A');
-		col=-1;
+		int number = choice.codePointAt(1);
+		
+		//Check if the user inputed a letter for the first character and number for the second.
+		if (letter>64 & letter<75 & number>48 & number<58) {
+		int row = (int)(letter - 'A');
+		int col=-1;
 		try {
 			col = Integer.parseInt(choice.substring(1))-1;
 		}catch(Exception e) {
-			System.out.println("Bad input number. Try again.");
-			choice = input.nextLine();
 			e.printStackTrace();
 		}
 		Shot loc = new Shot(col,row);
 		return loc;
-		}
-	
+		}else
+			System.out.println("Dragons in my code? What.");
+		return new Shot(11,11); 
+	}
 	public boolean checkGuess(Shot opfor) {
 		for(Ship s : deployedShips) {
 			if(s.checkHit(opfor)) {
